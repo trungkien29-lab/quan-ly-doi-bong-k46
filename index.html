@@ -124,45 +124,93 @@ th{background:#ff0000}
 </div>
 
 <script>
-let players=JSON.parse(localStorage.players||"[]");
-let achieves=JSON.parse(localStorage.achieves||"[]");
-let gallery=JSON.parse(localStorage.gallery||"[]");
-let team=localStorage.team||"CLB Bóng Đá";
-document.getElementById("teamName").innerText=team;
+let players = JSON.parse(localStorage.players || "[]");
+let achieves = JSON.parse(localStorage.achieves || "[]");
+let gallery = JSON.parse(localStorage.gallery || "[]");
+let team = localStorage.team || "CLB Bóng Đá";
 
-function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+document.getElementById("teamName").innerText = team;
 
-function saveTeam(){team=document.getElementById('teamInput').value;localStorage.team=team;document.getElementById('teamName').innerText=team;}
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function saveTeam(){
+  team = document.getElementById('teamInput').value;
+  localStorage.team = team;
+  document.getElementById('teamName').innerText = team;
+}
 
 function addPlayer(){
-players.push({
-name:name.value,number:+number.value,goal:+goal.value,assist:+assist.value,home:home.value,pos:pos.value,img:img.value
-});
-save();renderPlayers();renderFormation();}
+  let p = {
+    name: document.getElementById("name").value,
+    number: Number(document.getElementById("number").value),
+    goal: Number(document.getElementById("goal").value),
+    assist: Number(document.getElementById("assist").value),
+    home: document.getElementById("home").value,
+    pos: document.getElementById("pos").value,
+    img: document.getElementById("img").value
+  };
+
+  if(!p.name) return alert("Nhập tên cầu thủ");
+
+  players.push(p);
+  save();
+  renderPlayers();
+}
 
 function renderPlayers(){
-let s=search.value.toLowerCase();
-playerTable.innerHTML=players.filter(p=>p.name.toLowerCase().includes(s)).map((p,i)=>`
-<tr>
-<td><img class='player-img' src='${p.img||"https://i.imgur.com/8Km9tLL.png"}'></td>
-<td>${p.name}</td><td>${p.number}</td><td>${p.goal}</td><td>${p.assist}</td><td>${p.home}</td><td>${p.pos}</td>
-<td><button onclick='edit(${i})'>Sửa</button><button onclick='del(${i})'>Xóa</button></td>
-</tr>`).join('');}
+  let s = document.getElementById("search").value.toLowerCase();
 
-function edit(i){let p=players[i];name.value=p.name;number.value=p.number;goal.value=p.goal;assist.value=p.assist;home.value=p.home;pos.value=p.pos;img.value=p.img;players.splice(i,1);}
-function del(i){players.splice(i,1);save();renderPlayers();}
-function sortPlayers(){players.sort((a,b)=>a.number-b.number);save();renderPlayers();}
-function save(){localStorage.players=JSON.stringify(players);} 
+  document.getElementById("playerTable").innerHTML =
+  players
+  .filter(p=>p.name.toLowerCase().includes(s))
+  .map((p,i)=>`
+  <tr>
+  <td><img class='player-img' src='${p.img || "player1.jpg"}'></td>
+  <td>${p.name}</td>
+  <td>${p.number}</td>
+  <td>${p.goal}</td>
+  <td>${p.assist}</td>
+  <td>${p.home}</td>
+  <td>${p.pos}</td>
+  <td>
+    <button onclick='edit(${i})'>Sửa</button>
+    <button onclick='del(${i})'>Xóa</button>
+  </td>
+  </tr>`).join('');
+}
 
-function addAchieve(){achieves.push(achieveInput.value);localStorage.achieves=JSON.stringify(achieves);renderAchieve();}
-function renderAchieve(){achieveList.innerHTML=achieves.map(a=>`<li>${a}</li>`).join('');}
+function edit(i){
+  let p = players[i];
+  document.getElementById("name").value = p.name;
+  document.getElementById("number").value = p.number;
+  document.getElementById("goal").value = p.goal;
+  document.getElementById("assist").value = p.assist;
+  document.getElementById("home").value = p.home;
+  document.getElementById("pos").value = p.pos;
+  document.getElementById("img").value = p.img;
+  players.splice(i,1);
+}
 
-function addGallery(){gallery.push(galleryLink.value);localStorage.gallery=JSON.stringify(gallery);renderGallery();}
-function renderGallery(){galleryBox.innerHTML=gallery.map(g=>`<img src='${g}'>`).join('');}
+function del(i){
+  players.splice(i,1);
+  save();
+  renderPlayers();
+}
 
-function login(){if(user.value=='admin'&&pass.value=='123'){adminPanel.style.display='block';loginMsg.innerText='Đã đăng nhập';}else loginMsg.innerText='Sai';}
+function sortPlayers(){
+  players.sort((a,b)=>a.number-b.number);
+  save();
+  renderPlayers();
+}
 
-renderPlayers();renderAchieve();renderGallery();
+function save(){
+  localStorage.players = JSON.stringify(players);
+}
+
+renderPlayers();
 </script>
 </body>
 </html>
@@ -249,4 +297,5 @@ function renderFormation(){
 
   document.getElementById("formation").innerHTML=html;
 }
+
 
