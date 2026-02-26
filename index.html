@@ -138,7 +138,7 @@ function addPlayer(){
 players.push({
 name:name.value,number:+number.value,goal:+goal.value,assist:+assist.value,home:home.value,pos:pos.value,img:img.value
 });
-save();renderPlayers();}
+save();renderPlayers();renderFormation();}
 
 function renderPlayers(){
 let s=search.value.toLowerCase();
@@ -204,7 +204,7 @@ function showProfile(id){
 .m2{bottom:160px;left:60%}
 .st{top:40px;left:45%}
 </style>
-<div class="field">
+<div class="field" id="formation"></div>
   <div class="playerDot gk">GK</div>
   <div class="playerDot d1">Hậu vệ</div>
   <div class="playerDot d2">Hậu vệ</div>
@@ -236,3 +236,17 @@ function showPage(id){
 
 <h3>Tổng bàn thắng đội: <span id="tongBanThang">0</span></h3>
 <div id="profileBox"></div>
+function renderFormation(){
+  let posClass=["gk","d1","d2","d3","m1","m2","st"];
+  let html="";
+
+  players.slice(0,7).forEach((p,i)=>{
+    html+=`
+    <div class="playerDot ${posClass[i]||""}">
+      ${p.number} - ${p.name}
+    </div>`;
+  });
+
+  document.getElementById("formation").innerHTML=html;
+}
+
